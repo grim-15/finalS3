@@ -2,34 +2,93 @@
 
 {% block title %}Download Files{% endblock %}
 
-{% block body %}
-    <div class="container mt-4">
-        <h1>Download Files</h1>
+{% block stylesheets %}
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        .logo {
+            max-width: 150px;
+            margin: 20px auto;
+            display: block;
+        }
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .download-section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .download-section li {
+            margin-bottom: 10px;
+        }
+        .download-section a {
+            text-decoration: none;
+            color: #343a40;
+            font-weight: 500;
+        }
+        .download-section a:hover {
+            text-decoration: underline;
+            color: #007bff;
+        }
+        .toggle-button {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
 
-        <button class="btn btn-primary mb-3" id="toggleFilesButton">Show Files</button>
+{% block body %}
+    <div class="container mt-5">
+        <div class="header-section">
+            <img src="{{ asset('images/public/images/CoortyASSUR-AVEC-BL-QUADRI-01.png') }}" alt="Logo" class="logo">
+            <h1><i class="fas fa-download"></i> Download Files</h1>
+        </div>
+
+        <div class="toggle-button">
+            <button class="btn btn-primary" id="toggleFilesButton">
+                <i class="fas fa-eye"></i> Show Files
+            </button>
+        </div>
         
         <div class="download-section" style="display: none;" id="fileListSection">
-            <ul>
-                {% for file in files %}
-                    <li>
-                        <a href="{{ path('download_file', {'filename': file|url_encode}) }}">{{ file }}</a>
-                    </li>
-                {% else %}
-                    <li>No files available for download.</li>
-                {% endfor %}
-            </ul>
+            {% if files is not empty %}
+                <ul class="list-group">
+                    {% for file in files %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-file-alt"></i> {{ file }}</span>
+                            <a href="{{ path('download_file', {'filename': file|url_encode}) }}" class="btn btn-success btn-sm">
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="alert alert-warning text-center" role="alert">
+                    <i class="fas fa-exclamation-circle"></i> No files available for download.
+                </div>
+            {% endif %}
         </div>
     </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
         document.getElementById('toggleFilesButton').addEventListener('click', function() {
             var fileListSection = document.getElementById('fileListSection');
             if (fileListSection.style.display === 'none') {
                 fileListSection.style.display = 'block';
-                this.textContent = 'Hide Files';  
+                this.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Files';  
             } else {
                 fileListSection.style.display = 'none';
-                this.textContent = 'Show Files';  
+                this.innerHTML = '<i class="fas fa-eye"></i> Show Files';  
             }
         });
     </script>
